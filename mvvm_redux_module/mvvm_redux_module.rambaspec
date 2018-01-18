@@ -1,0 +1,17 @@
+# Template information section
+name: mvvm_redux_module
+summary: MVVM redux module template
+author: Andrey Samoshkin
+version: 1.0.0
+license: MIT
+
+# The declarations for code files
+code_files:
+- {name: ViewController.swift, path: Code/ViewController.swift.liquid}
+- {name: ViewModel.swift, path: Code/ViewModel.swift.liquid}
+- {name: Actions.swift, path: Code/Actions.swift.liquid}
+
+# The declarations for test files
+test_files:
+- {name: ViewControllerTests.swift, path: Tests/ViewControllerTests.swift.liquid}
+- {name: ViewModelTests.swift, path: Tests/ViewModelTests.swift.liquid}
