@@ -1,0 +1,33 @@
+import RxDataSources
+import RxSwift
+
+class {{ module_info.name }}ViewModel: ParentViewModel<EmptyGroupState, EmptyModuleState> {
+
+	// MARK: - Types
+
+	typealias {{ module_info.name }}Section = SectionModel<Void, {{ module_info.name }}CellModel>
+
+	// MARK: - Properties
+
+	let tableViewDataSource: Variable<[{{ module_info.name }}Section]> = Variable([])
+
+	// MARK: - Lifecycle
+
+    override init() {
+        super.init()
+
+        appendDataSource()
+    }
+
+    func appendDataSource(completion: (() -> Void)? = nil) {
+        guard (tableViewDataSource.value.map { $0.items.count }.reduce(0, +) % 30 == 0) else {
+            completion?()
+            return
+        }
+        // TODO Add dataSource loading, move completion block onSuccess
+
+        completion?()
+    }
+    
+}
+

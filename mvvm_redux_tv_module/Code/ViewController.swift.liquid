@@ -1,0 +1,78 @@
+import RxCocoa
+import RxDataSources
+import RxSwift
+import UIKit
+
+final class {{ module_info.name }}ViewController: ParentViewController {
+
+    // MARK: - View model
+
+    var viewModel: {{ module_info.name }}ViewModel!
+
+    // MARK: - Components
+
+    private let activityIndicatorView = UIActivityIndicatorView(activityIndicatorStyle: .gray).prepareForAutoLayout()
+    
+    private let tableView = UITableView(frame: CGRect.zero, style: .plain).thenUI { tableView in
+        tableView.separatorStyle = .none
+        tableView.estimatedRowHeight = 68
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.backgroundColor = .clear
+        tableView.register({{ module_info.name }}Cell.self)
+    }
+
+    // MARK: - Properties
+
+    private let dataSource = RxTableViewSectionedReloadDataSource<{{ module_info.name }}ViewModel.{{ module_info.name }}Section>(
+            configureCell: { _, tableView, indexPath, cellModel in
+                let cell: {{ module_info.name }}Cell = tableView.dequeueReusableCell(forIndexPath: indexPath)
+                cell.viewModel = cellModel
+                return cell
+            }
+    )
+
+    // MARK: - Actions
+
+    // MARK: - Appearance
+
+    // MARK: - Lifecycle
+
+    override func didFinishInitialization() {
+        super.didFinishInitialization()
+
+        viewModel.tableViewDataSource
+                .asObservable()
+                .bind(to: tableView.rx.items(dataSource: dataSource))
+                .disposed(by: disposeBag)
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.view.addSubview(tableView)
+
+        tableView.topAnchor ~= customNavigationBar.bottomAnchor
+        tableView.pinEdgesToSuperviewEdges(excluding: .top)
+        tableView.delegate = self
+        tableView.contentInset.bottom = 40
+    }
+
+}
+
+
+// MARK: - UITableViewDelegate
+
+extension {{ module_info.name }}ViewController: UITableViewDelegate {
+
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        let actualPosition = scrollView.contentOffset.y
+        let contentHeight = scrollView.contentSize.height - scrollView.frame.size.height
+        if actualPosition >= contentHeight {
+            activityIndicatorView.startAnimating()
+            viewModel.appendDataSource { [unowned self] in
+                self.activityIndicatorView.stopAnimating()
+            }
+        }
+    }
+
+}

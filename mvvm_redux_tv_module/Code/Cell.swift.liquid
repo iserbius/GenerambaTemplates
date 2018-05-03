@@ -1,0 +1,37 @@
+import Foundation
+import RxGesture
+import RxSwift
+import UIKit
+
+final class {{ module_info.name }}Cell: ParentTableViewCell {
+
+	// MARK: - Properties
+
+	var viewModel: {{ module_info.name }}CellModel? {
+        didSet {
+            guard let viewModel = viewModel else {
+                return
+            }
+        }
+    }
+
+	// MARK: - Components
+
+
+    // MARK: - Lifecycle
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        selectionStyle = .none
+        contentView.backgroundColor = .white
+
+    }
+
+    // MARK: - Helpers
+    
+}
+
